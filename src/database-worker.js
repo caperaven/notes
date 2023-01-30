@@ -19,6 +19,10 @@ class DatabaseWorker {
     static async delete(id) {
         return globalThis.database.delete(id);
     }
+
+    static async getAll() {
+        return globalThis.database.getAll();
+    }
 }
 
 /**
@@ -33,17 +37,44 @@ self.onmessage = async (event) => {
     const {type, data} = event.data;
 
     switch (type) {
-        case "create":
+        case "create": {
             await DatabaseWorker.create(data);
+            self.postMessage({data: true});
             break;
-        case "read":
-            await DatabaseWorker.read(data);
+        }
+        case "read": {
+            const result = await DatabaseWorker.read(data);
+            self.postMessage({data: result});
             break;
-        case "update":
+        }
+        case "update": {
             await DatabaseWorker.update(data);
+            self.postMessage({data: true});
             break;
-        case "delete":
+        }
+        case "delete": {
             await DatabaseWorker.delete(data);
+            self.postMessage({data: true});
             break;
+        }
+        case "getAll": {
+            const result = await DatabaseWorker.getAll();
+            self.postMessage({data: result});
+            break;
+        }
+        case "initDB": {
+            await initDB();
+            self.postMessage({type: "ready"});
+            break;
+        }
     }
 };
+
+async function initDB() {
+    return new Promise(resolve => {
+        Database.connect().then(database => {
+            globalThis.database = database;
+            resolve();
+        })
+    })
+}

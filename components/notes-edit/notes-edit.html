@@ -1,0 +1,49 @@
+<style>
+    [role="toolbar"] {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--padding);
+        padding: 0.5em;
+        background-color: var(--cl-panel);
+        border-bottom: var(--border);
+    }
+
+    form {
+        margin-top: 1rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    input, textarea {
+        width: 100%;
+        max-width: 400px;
+        padding: var(--padding);
+    }
+
+    input:invalid, textarea:invalid {
+        border: 1px solid red;
+    }
+</style>
+
+<div role="toolbar">
+    <button data-action="new">New</button>
+    <button data-action="save">Save</button>
+    <button data-action="delete">Delete</button>
+    <button data-action="cancel">Cancel</button>
+</div>
+
+<form>
+    <label>
+        <div aria-label="title">Title</div>
+        <input id="edtTitle" type="text" data-field="title" required>
+    </label>
+
+    <label aria-label="notes">
+        <div>Notes</div>
+        <textarea id="edtNotes" data-field="notes" required></textarea>
+    </label>
+</form>

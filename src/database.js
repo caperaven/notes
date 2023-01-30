@@ -135,6 +135,16 @@ class Database {
     }
 
     /**
+     * @method getAll - get all records from the database
+     * @returns {Promise<void>}
+     */
+    async getAll() {
+        return this.#performTransaction((store) => {
+            return store.getAll();
+        });
+    }
+
+    /**
      * @method filter - filter records from the database
      */
     async filter(title) {
@@ -158,5 +168,3 @@ class Database {
         });
     }
 }
-
-Database.connect().then(database => globalThis.database = database);
