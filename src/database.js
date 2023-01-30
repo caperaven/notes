@@ -16,7 +16,7 @@
  * - delete - delete a record from the data store based on the id
  * - filter - filter records from the data store based on the filter object
  */
-export class Database {
+class Database {
     #dbName = 'notes';
     #storeName = 'notes';
     #db = null;
@@ -37,7 +37,7 @@ export class Database {
      */
     #connect() {
         return new Promise((resolve, reject) => {
-            const request = window.indexedDB.open(this.#dbName, 1);
+            const request = self.indexedDB.open(this.#dbName, 1);
 
             request.onerror = (event) => {
                 reject(event.target.error);
@@ -158,3 +158,5 @@ export class Database {
         });
     }
 }
+
+Database.connect().then(database => globalThis.database = database);
