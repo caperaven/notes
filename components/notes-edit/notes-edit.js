@@ -60,8 +60,11 @@ class NotesEdit extends HTMLElement {
     async #delete() {
         if (this.#note == null) return;
 
+        const id = this.#note.id;
+        await this.#new();
+
         this.dispatchEvent(new CustomEvent("change", {
-            detail: { event: "delete", note: this.#note.id }
+            detail: { event: "delete", note: id }
         }));
     }
 
@@ -77,7 +80,7 @@ class NotesEdit extends HTMLElement {
         this.#actions[action]?.();
     }
 
-    async set(note) {
+    async setNote(note) {
         this.#note = note;
         await this.#reset();
     }

@@ -12,6 +12,7 @@
             --border: 1px solid silver;
             --padding: 0.5rem;
             --cl-panel: #f5f5f5;
+            --cl-highlight: #879eff;
         }
 
         * {
@@ -58,6 +59,11 @@
         li {
             padding: var(--padding);
             border-bottom: var(--border);
+            cursor: pointer;
+        }
+
+        li[aria-selected="true"] {
+            background-color: var(--cl-highlight);
         }
     </style>
 </head>

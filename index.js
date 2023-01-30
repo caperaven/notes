@@ -6,6 +6,7 @@ class ViewModel {
     #notesList = null;
     #notesEdit = null;
     #notesChangeHandler = this.#notesChange.bind(this);
+    #notesListChangeHandler = this.#notesListChange.bind(this);
 
     async connectedCallback() {
         requestAnimationFrame(async () => {
@@ -13,6 +14,8 @@ class ViewModel {
             this.#notesEdit = document.querySelector("notes-edit");
 
             this.#notesEdit.addEventListener("change", this.#notesChangeHandler);
+            this.#notesList.addEventListener("change", this.#notesListChangeHandler);
+
             await this.performAction("initDB", null);
             await this.#refresh();
         })
@@ -23,12 +26,14 @@ class ViewModel {
      */
     dispose() {
         this.#notesEdit.removeEventListener("change", this.#notesChangeHandler);
+        this.#notesList.removeEventListener("change", this.#notesListChangeHandler);
 
         this.#databaseWorker.terminate();
         this.#databaseWorker = null;
         this.#notesList = null;
         this.#notesEdit = null;
         this.#notesChangeHandler = null;
+        this.#notesListChangeHandler = null;
     }
 
     async #refresh() {
@@ -39,8 +44,18 @@ class ViewModel {
     async #notesChange(event) {
         const actionEvent = event.detail.event;
         const note = event.detail.note;
-        await this.performAction(actionEvent, note).catch(e => console.error(e));
-        await this.#notesList[actionEvent](note);
+        const result = await this.performAction(actionEvent, note).catch(e => console.error(e));
+        await this.#notesList[actionEvent](result.data);
+        await this.#notesList.setSelected(result.data.id);
+
+        if (typeof result.data == "object") {
+            await this.#notesEdit.setNote(result.data);
+        }
+    }
+
+    async #notesListChange(event) {
+        const note = await this.performAction("read", Number(event.detail)).catch(e => console.error(e));
+        await this.#notesEdit.setNote(note.data);
     }
 
     /**

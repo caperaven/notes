@@ -38,28 +38,28 @@ self.onmessage = async (event) => {
 
     switch (type) {
         case "create": {
-            await DatabaseWorker.create(data);
-            self.postMessage({data: true});
+            const id = await DatabaseWorker.create(data);
+            const record = await DatabaseWorker.read(id);
+            self.postMessage({data: record});
             break;
         }
         case "read": {
-            const result = await DatabaseWorker.read(data);
-            self.postMessage({data: result});
+            self.postMessage({data: await DatabaseWorker.read(data)});
             break;
         }
         case "update": {
-            await DatabaseWorker.update(data);
-            self.postMessage({data: true});
+            const id = await DatabaseWorker.update(data);
+            const record = await DatabaseWorker.read(id);
+            self.postMessage({data: record});
             break;
         }
         case "delete": {
             await DatabaseWorker.delete(data);
-            self.postMessage({data: true});
+            self.postMessage({data: data});
             break;
         }
         case "getAll": {
-            const result = await DatabaseWorker.getAll();
-            self.postMessage({data: result});
+            self.postMessage({data: await DatabaseWorker.getAll()});
             break;
         }
         case "initDB": {

@@ -9,6 +9,26 @@
  * - delete - delete a note list item
  */
 class NotesList extends HTMLUListElement {
+    #clickHandler = this.#click.bind(this);
+
+    async connectedCallback() {
+        this.addEventListener("click", this.#clickHandler);
+    }
+
+    async disconnectedCallback() {
+        this.removeEventListener("click", this.#clickHandler);
+        this.#clickHandler = null;
+    }
+
+    #click(event) {
+        if (event.target == this) return;
+
+        const selected = this.querySelector("[aria-selected='true']");
+        selected?.removeAttribute("aria-selected");
+        event.target.setAttribute("aria-selected", "true");
+        this.dispatchEvent(new CustomEvent("change", { detail: event.target.dataset.id }));
+    }
+
     /**
      * @method #addListItem - add a single note to the list
      * @param note {object} - the note to add
@@ -20,6 +40,13 @@ class NotesList extends HTMLUListElement {
         listItem.innerHTML = note.title;
         listItem.setAttribute("data-id", note.id);
         parentElement.appendChild(listItem);
+    }
+
+    async setSelected(id) {
+        const selected = this.querySelector("[aria-selected='true']");
+        selected?.removeAttribute("aria-selected");
+        const listItem = this.querySelector(`[data-id="${id}"]`);
+        listItem?.setAttribute("aria-selected", "true");
     }
 
     /**
