@@ -20,6 +20,10 @@ class NotesList extends HTMLUListElement {
         this.#clickHandler = null;
     }
 
+    /**
+     * @method click - handle the click event selecting a list item
+     * @param event
+     */
     #click(event) {
         if (event.target == this) return;
 
@@ -42,6 +46,11 @@ class NotesList extends HTMLUListElement {
         parentElement.appendChild(listItem);
     }
 
+    /**
+     * @method setSelected - set the selected note
+     * @param id
+     * @returns {Promise<void>}
+     */
     async setSelected(id) {
         const selected = this.querySelector("[aria-selected='true']");
         selected?.removeAttribute("aria-selected");

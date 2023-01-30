@@ -36,11 +36,20 @@ class ViewModel {
         this.#notesListChangeHandler = null;
     }
 
+    /**
+     * @method #refresh - refresh the notes list
+     * @returns {Promise<void>}
+     */
     async #refresh() {
         const notes = await this.performAction("getAll", null);
         await this.#notesList.addNotes(notes.data);
     }
 
+    /**
+     * @method #notesChange - handle the change event from the notes edit component
+     * @param event
+     * @returns {Promise<void>}
+     */
     async #notesChange(event) {
         const actionEvent = event.detail.event;
         const note = event.detail.note;
@@ -53,6 +62,11 @@ class ViewModel {
         }
     }
 
+    /**
+     * @method #notesListChange - handle the change event from the notes list component
+     * @param event
+     * @returns {Promise<void>}
+     */
     async #notesListChange(event) {
         const note = await this.performAction("read", Number(event.detail)).catch(e => console.error(e));
         await this.#notesEdit.setNote(note.data);
